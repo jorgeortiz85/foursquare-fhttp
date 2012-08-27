@@ -280,7 +280,14 @@ class FHttpClientTest extends SpecsMatchers {
 
     def testFlow(usePost: Boolean) {
       import com.foursquare.fhttp.FHttpRequest.asOAuth1Token
-      val clientOA = new FHttpClient("oauth", "term.ie:80")
+      val clientOA =
+        new FHttpClient(
+          "oauth",
+          "term.ie:80",
+          (ClientBuilder()
+            .codec(Http())
+            .hostConnectionLimit(1))
+            .tcpConnectTimeout(1.seconds))
       val consumer = Token("key", "secret")
 
       // Get the request token
